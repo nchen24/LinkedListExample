@@ -16,9 +16,14 @@ typedef struct DArray{
 
 Node *makeRandListOfSizeN(int n){
     Node *list = NULL;
-    for(int i = 0 ; i < n ; i++){
+    for(int i = 0 ; i < n ; i++)
         list = addToHead(list, arc4random());
-    }
+    return list;
+}
+Node *makeRandListOfSizeN_bounded(int n, int upperBound){
+    Node *list = NULL;
+    for(int i = 0 ; i < n ; i++)
+        list = addToHead(list, arc4random_uniform(upperBound));
     return list;
 }
 
@@ -57,7 +62,7 @@ void testAddToHead(){
     list = addToHead(list, 19);
     printList(list);
 #if DELETE_DEFINED
-        delList(list);
+    delList(list);
 #endif
     printf(">> Test add to head completed! <<\n");
 }
@@ -205,6 +210,43 @@ void testDeleteAtN(){
     printf(">> Test delete at n completed! <<\n");
 }
 
+void stressTests(){
+    for(int i = 0 ; i <= 1000 ; i++){
+        Node *list = makeRandListOfSizeN(i * 1000);
+        delList(list);
+        if(!(i%50)){
+            printf("Made and deleted list of size %d...\n", i*1000);
+        }
+    }
+
+    int hellListSize = 10000000;
+    Node *list = makeRandListOfSizeN_bounded(hellListSize, 5000000);
+    printList(list);
+
+    for(int i = 0 ; i < 5000000 ; i++){
+        Node *t = findElement(list, i);
+        if(t){
+            int pos = getNumElements(t->next);
+            printf("Found %d in list at pos %d!\n", i, pos);
+            break;
+        }
+    }
+    for(int i = 0 ; i < 3000 ; i++){
+        int op = arc4random() % 4;
+        switch(op){
+            case 0: list = insertAtN(list, arc4random(),
+                              arc4random_uniform(hellListSize)); break;
+            case 1: list = deleteAtN(list, arc4random_uniform(hellListSize)); break;
+            case 2: list = changeValueAtN(list, arc4random(),
+                                   arc4random_uniform(hellListSize)); break;
+            case 3: list = addToTail(list, arc4random()); break;
+        }
+        if(!(i%50))
+            printf("%d random operations completed...\n", i);
+    }
+    delList(list);
+}
+
 int main(){
     srand(time(0));
     testMakeList(); // Also tests print
@@ -219,6 +261,8 @@ int main(){
 
     printf(">> All basic tests completed! <<\n");
     printf(">> Now starting stress tests... <<\n");
+    stressTests();
+    printf(">> Congratulations, stress tests passed! <<\n");
 
     return 0;
 }
