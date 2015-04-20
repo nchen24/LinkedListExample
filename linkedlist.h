@@ -8,10 +8,10 @@ typedef struct Node{
 
 Node *makeList(int v);
 Node *addToHead(Node *l, int v);
-void addToTail(Node *l, int v);
-void addToAtN(Node *l, int v, int n);
-void deleteAtN(Node *l, int n);
-void changeValueAtN(Node *l, int n);
+Node *addToTail(Node *l, int v);
+Node *addToAtN(Node *l, int v, int n);
+Node *deleteAtN(Node *l, int n);
+Node *changeValueAtN(Node *l, int n);
 int getNumElements(Node *l);
 Node *findElement(Node *l, int v);
 void delList(Node *l);
