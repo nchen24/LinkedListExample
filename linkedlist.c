@@ -4,6 +4,10 @@
 #include <assert.h>
 #include "linkedlist.h"
 
+// Helper functions
+Node* traverseToN(Node *l, int n);
+bool nIsInRange(Node *l, int n);
+
 // Macro that allows for assertions to not halt the program.
 #define myassert(b) \
     do{\
@@ -72,7 +76,7 @@ Node *addToTail(Node *l, int v){
         return makeList(v);
 
     Node *iter = l;
-    while(iter->next){
+    while(iter->next){      // Set iter to the next to last node
         iter = iter->next;
     }
     iter->next = makeList(v);
@@ -92,16 +96,19 @@ Node *addToTail(Node *l, int v){
  *                  triggered, and a NULL list returned.
  */
 Node *insertAtN(Node *l, int v, int n){
+    myassert(nIsInRange(l, n));
     if(!l)
         return makeList(v);
     if(n == 0){
         return addToHead(l, v);
     }
-    Node *before = traverseToN(l, n-1);
-    assert(before);
-    Node *after = before->next;
-    before->next = makeList(v);
-    before->next->next = after;
+
+    // Set before to the node before the place to insert
+    Node *before  = traverseToN(l, n-1);
+    Node *after   = before->next; // Save the current next
+    Node *newNode = makeList(v);  // Create the new node
+    before->next  = newNode;      // Link the previous nodes to the new node
+    newNode->next = after;        // Link the new node to the posterior nodes
     return l;
 }
 
@@ -121,10 +128,12 @@ Node *deleteAtN(Node *l, int n){
         free(l);
         return after;
     }
-    Node *toDelBefore = traverseToN(l, n-1);
-    Node *toDelAfter = toDelBefore->next->next;
-    free(toDelBefore->next);
-    toDelBefore->next = toDelAfter;
+    Node *toDelBefore = traverseToN(l, n-1); // Traverse to the node before
+    
+    // Next is guaranteed to exist, since we traversed to n-1.
+    Node *toDelAfter  = toDelBefore->next->next; // Set after to be two after before.
+    free(toDelBefore->next);                     // Delete the target node.
+    toDelBefore->next = toDelAfter;              // Relink the list.
 
     return l;
 }
@@ -156,7 +165,7 @@ Node *changeValueAtN(Node *l, int v, int n){
  */
 int getNumElements(Node *l){
     int c = 0;
-    for(Node *iter = l ; l ; l = l->next)
+    for(Node *iter = l ; iter ; iter = iter->next)
         c++;
     return c;
 }
@@ -171,9 +180,11 @@ int getNumElements(Node *l){
  * Failure cases:   None.
  */
 Node *findElement(Node *l, int v){
-    for(Node *iter = l ; iter ; iter = iter->next)
-        if(iter->val == v)
+    for(Node *iter = l ; iter ; iter = iter->next){
+        if(iter->val == v){
             return iter;
+        }
+    }
     return NULL;
 }
 
@@ -219,7 +230,7 @@ void printList(Node *l){
  * Failure cases:   If n < 0 or n > length(l), then an assertion will be
  *                  triggered, and a NULL list returned.
  */
-static Node *traverseToN(Node *l, int n){
+Node *traverseToN(Node *l, int n){
     myassert(nIsInRange(l, n));
     Node *iter = l;
     for(int i = 0 ; i < n ; i++){
@@ -237,7 +248,7 @@ static Node *traverseToN(Node *l, int n){
         - n:        The value to test.
  * Failure cases:   None.
  */
-static bool nIsInRange(Node *l, int n){
+bool nIsInRange(Node *l, int n){
     if(n < 0 || n > getNumElements(l))
         return false;
     return true;
