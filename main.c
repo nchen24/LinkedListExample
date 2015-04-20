@@ -151,7 +151,7 @@ void testChangeValueAtN(){
     DArray arr = arrayify(list);
 
     for(int i = 0 ; i < (int)getArrLen(vals) ; i++){
-        assert(arr.contents[i] == arr.contents[i]);
+        assert(arr.contents[poss[i]] == vals[i]); // TODO: ???
         printf("Test %d in testChangeValueAtN passed!\n", i);
     }
 

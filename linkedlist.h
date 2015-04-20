@@ -36,8 +36,4 @@ void delList(Node *l);                          // #6
 // Print list l
 void printList(Node *l);                        // #2
 
-
-static Node* traverseToN(Node *l, int n);
-static bool nIsInRange(Node *l, int n);
-
 #endif
