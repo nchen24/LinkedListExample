@@ -6,16 +6,16 @@ typedef struct Node{
     Node *next;
 } Node;
 
-Node *makeList(int v);
-Node *addToHead(Node *l, int v);
-Node *addToTail(Node *l, int v);
-Node *addToAtN(Node *l, int v, int n);
-Node *deleteAtN(Node *l, int n);
-Node *changeValueAtN(Node *l, int n);
-int getNumElements(Node *l);
-Node *findElement(Node *l, int v);
-void delList(Node *l);
-void printList(Node *l);
+Node *makeList(int v);                  // #1
+Node *addToHead(Node *l, int v);        // #3
+Node *addToTail(Node *l, int v);        // #7
+Node *addToAtN(Node *l, int v, int n);  // #9
+Node *deleteAtN(Node *l, int n);        // #10
+Node *changeValueAtN(Node *l, int n);   // #8
+int getNumElements(Node *l);            // #4
+Node *findElement(Node *l, int v);      // #5
+void delList(Node *l);                  // #6
+void printList(Node *l);                // #2
 
 
 static Node* traverseToN(Node *l, int n);
