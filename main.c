@@ -155,6 +155,40 @@ void testChangeValueAtN(){
     printf(">> Test change value at n completed! <<\n");
 }
 
+void testInsertAtN(){
+    Node *list = makeRandListOfSizeN(100);
+    int vals[] = {16,   1024,   99, -10,    -54098};
+    int poss[] = {0,    40,     22, 99,     32};
+
+    // Test insertion into null list
+    Node *test = NULL;
+    test = insertAtN(test, vals[0], poss[0]);
+    assert(test->val == vals[0]);
+
+    // Insert at various places
+    for(int i = 0 ; i < getArrLen(vals) ; i++){
+        list = insertAtN(list, vals[i], poss[i]);
+    }
+
+    // Ensure length is correct
+    assert(getNumElements(list) == 100 + getArrLen(vals));
+
+    // Insert random value at end
+    int newRandVal = arc4random();
+    list = insertAtN(list, newRandVal, getNumElements(list));
+
+    DArray arr = arrayify(list);
+    // Ensure that value (plus a couple other inserted ones) are correct
+    assert(arr.contents[arr.size-1] == newRandVal);
+    assert(arr.contents[poss[0]] == vals[0]);
+    assert(arr.contents[poss[2]] == vals[2]);
+
+    free(arr.contents);
+    delList(list);
+    delList(test);
+    printf(">> Test insert at n completed! <<\n");
+}
+
 int main(){
     srand(time(0));
     testMakeList(); // Also tests print
@@ -164,6 +198,7 @@ int main(){
     testDelList();
     testAddToTail();
     testChangeValueAtN();
+    testInsertAtN();
 
     return 0;
 }
