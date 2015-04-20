@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <stdbool.h>
@@ -36,7 +37,7 @@ DArray arrayify(Node *list){
 void testMakeList(){
     int testCases[] = {8, 'n', -1, 149327859816738, -583492752983568732};
 
-    for(int i = 0 ; i < getArrLen(testCases) ; i++){
+    for(int i = 0 ; i < (int)getArrLen(testCases) ; i++){
         Node *list;
         list = makeList(testCases[i]);
         printList(list);
@@ -65,7 +66,7 @@ void testGetNumElements(){
     int vals[] = {0, 3, -153, 33895, 3049, 101010};
     Node *list= NULL;
     assert(getNumElements(list) == 0);
-    for(int i = 0 ; i < getArrLen(vals) ; i++){
+    for(int i = 0 ; i < (int)getArrLen(vals) ; i++){
         list = addToHead(list, vals[i]);
         assert(getNumElements(list) == i+1);
     }
@@ -80,16 +81,16 @@ void testFindElement(){
     int testCases[] = {3,   101010, -10,    0,      15,     1};
     bool answers[] =  {true, true,  false,  true,   false,  false};
 
-    assert(getArrLen(testCases) == getArrLen(answers));
+    assert((int)getArrLen(testCases) == (int)getArrLen(answers));
 
     Node *list= NULL;
     assert(findElement(list, testCases[0]) == NULL);
 
-    for(int i = 0 ; i < getArrLen(vals) ; i++){
+    for(int i = 0 ; i < (int)getArrLen(vals) ; i++){
         list = addToHead(list, vals[i]);
     }
 
-    for(int i = 0 ; i < getArrLen(vals) ; i++){
+    for(int i = 0 ; i < (int)getArrLen(vals) ; i++){
         Node *temp = findElement(list, testCases[i]);
         assert((temp != NULL) == answers[i]);
         printf("Test %d in testFindElement passed!\n", i);
@@ -118,12 +119,12 @@ void testDelList(){
 void testAddToTail(){
     int vals[] = {0, 3, -153, 33895, 3049, 101010};
     Node *list = NULL;
-    for(int i = 0 ; i < getArrLen(vals) ; i++){
+    for(int i = 0 ; i < (int)getArrLen(vals) ; i++){
         list = addToTail(list, vals[i]);
     }
     DArray test = arrayify(list);
-    assert(test.size == getArrLen(vals));
-    for(int i = 0 ; i < getArrLen(vals) ; i++){
+    assert(test.size == (int)getArrLen(vals));
+    for(int i = 0 ; i < (int)getArrLen(vals) ; i++){
         assert(test.contents[i] == vals[i]);
     }
     free(test.contents);
@@ -138,13 +139,13 @@ void testChangeValueAtN(){
     changeValueAtN(list, 0, -1);  // Should cause an error in your way of choice!
     changeValueAtN(list, 0, 300);
 
-    for(int i = 0 ; i < getArrLen(vals) ; i++){
+    for(int i = 0 ; i < (int)getArrLen(vals) ; i++){
         changeValueAtN(list, vals[i], poss[i]);
     }
 
     DArray arr = arrayify(list);
 
-    for(int i = 0 ; i < getArrLen(vals) ; i++){
+    for(int i = 0 ; i < (int)getArrLen(vals) ; i++){
         assert(arr.contents[i] == arr.contents[i]);
         printf("Test %d in testChangeValueAtN passed!\n", i);
     }
@@ -166,12 +167,12 @@ void testInsertAtN(){
     assert(test->val == vals[0]);
 
     // Insert at various places
-    for(int i = 0 ; i < getArrLen(vals) ; i++){
+    for(int i = 0 ; i < (int)getArrLen(vals) ; i++){
         list = insertAtN(list, vals[i], poss[i]);
     }
 
     // Ensure length is correct
-    assert(getNumElements(list) == 100 + getArrLen(vals));
+    assert(getNumElements(list) == 100 + (int)getArrLen(vals));
 
     // Insert random value at end
     int newRandVal = arc4random();
@@ -189,6 +190,21 @@ void testInsertAtN(){
     printf(">> Test insert at n completed! <<\n");
 }
 
+void testDeleteAtN(){
+    Node *list = makeRandListOfSizeN(100);
+
+    list = deleteAtN(list, 99);
+    list = deleteAtN(list, 0);
+    deleteAtN(list, 99); // Should cause an error in your way of choice!
+
+    int origSize = getNumElements(list);
+    for(int i = 0 ; i < origSize ; i++){ // Alternative way of deleting the list
+        list = deleteAtN(list, 0);
+    }
+    assert(getNumElements(list) == 0);
+    printf(">> Test delete at n completed! <<\n");
+}
+
 int main(){
     srand(time(0));
     testMakeList(); // Also tests print
@@ -199,6 +215,10 @@ int main(){
     testAddToTail();
     testChangeValueAtN();
     testInsertAtN();
+    testDeleteAtN();
+
+    printf(">> All basic tests completed! <<\n");
+    printf(">> Now starting stress tests... <<\n");
 
     return 0;
 }
