@@ -115,6 +115,46 @@ void testDelList(){
     printf(">> Test del list completed! <<\n");
 }
 
+void testAddToTail(){
+    int vals[] = {0, 3, -153, 33895, 3049, 101010};
+    Node *list = NULL;
+    for(int i = 0 ; i < getArrLen(vals) ; i++){
+        list = addToTail(list, vals[i]);
+    }
+    DArray test = arrayify(list);
+    assert(test.size == getArrLen(vals));
+    for(int i = 0 ; i < getArrLen(vals) ; i++){
+        assert(test.contents[i] == vals[i]);
+    }
+    free(test.contents);
+    delList(list);
+    printf(">> Test add to tail completed! <<\n");
+}
+void testChangeValueAtN(){
+    int vals[] = {16,   1024,   99, -10,    -54098};
+    int poss[] = {0,    40,     22, 99,     32};
+    Node *list = makeRandListOfSizeN(100);
+
+    changeValueAtN(list, 0, -1);  // Should cause an error in your way of choice!
+    changeValueAtN(list, 0, 300);
+
+    for(int i = 0 ; i < getArrLen(vals) ; i++){
+        changeValueAtN(list, vals[i], poss[i]);
+    }
+
+    DArray arr = arrayify(list);
+
+    for(int i = 0 ; i < getArrLen(vals) ; i++){
+        assert(arr.contents[i] == arr.contents[i]);
+        printf("Test %d in testChangeValueAtN passed!\n", i);
+    }
+
+    free(arr.contents);
+    delList(list);
+
+    printf(">> Test change value at n completed! <<\n");
+}
+
 int main(){
     srand(time(0));
     testMakeList(); // Also tests print
@@ -122,6 +162,8 @@ int main(){
     testGetNumElements();
     testFindElement();
     testDelList();
+    testAddToTail();
+    testChangeValueAtN();
 
     return 0;
 }
